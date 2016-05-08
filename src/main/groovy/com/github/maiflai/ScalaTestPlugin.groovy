@@ -34,6 +34,19 @@ class ScalaTestPlugin implements Plugin<Project> {
                 test.extensions.add(ScalaTestAction.CONFIG, config)
                 test.extensions.add("config", { String name, value -> config.put(name, value) } )
                 test.extensions.add("configMap", { Map<String, ?> c -> config.putAll(c) } )
+
+                def result = new StringBuilder()
+                test.extensions.add(ScalaTestAction.TESTRESULT, result)
+                test.extensions.add('testResult', { String name -> result.append(name) } )
+
+                def output = new StringBuilder()
+                test.extensions.add(ScalaTestAction.TESTOUTPUT, output)
+                test.extensions.add('testOutput', { String name -> output.append(name) } )
+
+                def errorOutput = new StringBuilder()
+                test.extensions.add(ScalaTestAction.TESTERROR, errorOutput)
+                test.extensions.add('testError', { String name -> errorOutput.append(name) } )
+
                 if (test.name != JavaPlugin.TEST_TASK_NAME) {
                     test.reports.html.destination = project.reporting.file(test.name)
                 }

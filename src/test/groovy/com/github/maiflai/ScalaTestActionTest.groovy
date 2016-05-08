@@ -13,6 +13,7 @@ import static org.hamcrest.CoreMatchers.equalTo
 import static org.hamcrest.CoreMatchers.hasItem
 import static org.hamcrest.CoreMatchers.not
 import static org.hamcrest.core.CombinableMatcher.both
+import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertThat
 
 class ScalaTestActionTest {
@@ -203,5 +204,63 @@ class ScalaTestActionTest {
         test.configMap([a:'b', c:1])
         def args = commandLine(test)
         assertThat(args, both(hasItem('-Da=b')).and(hasItem("-Dc=1")))
+    }
+
+    @Test
+    public void workingDir() throws Exception {
+        Task test = testTask()
+        def workDir = '/tmp'
+        test.workingDir = workDir
+        JavaExecAction action = ScalaTestAction.makeAction(test)
+        assertEquals(workDir, action.workingDir.path)
+    }
+
+    @Test
+    public void testResult() throws Exception {
+        Task test = testTask()
+        def resultFile = '/tmp/result.txt'
+        test.testResult resultFile
+        def args = commandLine(test)
+        assertThat(args, hasOption('-f', resultFile))
+    }
+
+    @Test
+    public void testOutput() throws Exception {
+        Task test = testTask()
+        def outputFile = 'testOutput.txt'
+        test.testOutput outputFile
+        JavaExecAction action = ScalaTestAction.makeAction(test)
+        def outStream = action.standardOutput as FileOutputStream
+        try {
+            outStream.newPrintWriter().withCloseable {
+                it.println('testing')
+            }
+            // check the contents
+            new FileInputStream(outputFile).newReader().withCloseable {
+                assertEquals('testing', it.readLine())
+            }
+        } finally {
+            new File(outputFile).delete()
+        }
+    }
+
+    @Test
+    public void testError() throws Exception {
+        Task test = testTask()
+        def errorFile = 'testError.txt'
+        test.testError errorFile
+        JavaExecAction action = ScalaTestAction.makeAction(test)
+        def outStream = action.errorOutput as FileOutputStream
+        try {
+            outStream.newPrintWriter().withCloseable {
+                it.println('testing')
+            }
+            // check the contents
+            new FileInputStream(errorFile).newReader().withCloseable {
+                assertEquals('testing', it.readLine())
+            }
+        } finally {
+            new File(errorFile).delete()
+        }
     }
 }
