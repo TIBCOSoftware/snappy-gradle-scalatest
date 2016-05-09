@@ -1,0 +1,8 @@
+
+This is a Groovy project and hence does not have a javadoc jar.
+Instead please see its groovydoc jar.
+
+This empty javadoc jar was created to enable this project publish itself on
+Sonatype OSSRH.
+
+For more details, please see README.md
