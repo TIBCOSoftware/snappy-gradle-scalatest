@@ -69,12 +69,12 @@ class ScalaTestAction implements Action<Test> {
         // set the standard output and error
         def output = t.extensions.findByName(TESTOUTPUT) as String
         if (output && output.size() > 0) {
-            def outFile = new FileOutputStream(output)
+            def outFile = new FileOutputStream(output, true)
             javaExecHandleBuilder.setStandardOutput(outFile)
         }
         def errorOutput = t.extensions.findByName(TESTERROR) as String
         if (errorOutput && errorOutput.size() > 0) {
-            def errFile = new FileOutputStream(errorOutput)
+            def errFile = new FileOutputStream(errorOutput, true)
             javaExecHandleBuilder.setErrorOutput(errFile)
         }
         javaExecHandleBuilder.setIgnoreExitValue(true)
