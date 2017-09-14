@@ -1,6 +1,6 @@
 gradle-scalatest
 ================
-A plugin to enable the use of scalatest in a gradle Scala project.
+A plugin to enable the use of scalatest in a gradle Scala project. [![Build Status](https://travis-ci.org/maiflai/gradle-scalatest.svg?branch=master)](https://travis-ci.org/maiflai/gradle-scalatest)
 
 Getting started
 ---------------
@@ -13,8 +13,8 @@ order to create the HTML report.
 
 ```groovy
 dependencies {
-  testCompile 'org.scalatest:scalatest_2.11:2+'
-  testRuntime 'org.pegdown:pegdown:1.1.0'
+  testCompile 'org.scalatest:scalatest_2.11:3.0.1'
+  testRuntime 'org.pegdown:pegdown:1.4.2'
 }
 ```
 ---
