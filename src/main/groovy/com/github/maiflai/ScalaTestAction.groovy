@@ -79,7 +79,8 @@ class ScalaTestAction implements Action<Test> {
         def output = t.extensions.findByName(TESTOUTPUT) as String
         if (output && output.size() > 0) {
             def outFile = new FileOutputStream(output, true)
-            javaExecHandleBuilder.setStandardOutput(outFile)
+            def outStream = new org.apache.commons.io.output.TeeOutputStream(outFile, System.out)
+            javaExecHandleBuilder.setStandardOutput(outStream)
         }
         def errorOutput = t.extensions.findByName(TESTERROR) as String
         if (errorOutput && errorOutput.size() > 0) {

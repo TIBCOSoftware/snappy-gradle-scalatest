@@ -322,9 +322,9 @@ class ScalaTestActionTest {
         def outputFile = 'testOutput.txt'
         test.testOutput outputFile
         JavaExecAction action = ScalaTestAction.makeAction(test, FACTORY)
-        def outStream = action.standardOutput as FileOutputStream
+        def outStream = action.standardOutput
         try {
-            outStream.newPrintWriter().withCloseable {
+            new PrintWriter(outStream).withCloseable {
                 it.println('testing')
             }
             // check the contents
@@ -342,9 +342,9 @@ class ScalaTestActionTest {
         def errorFile = 'testError.txt'
         test.testError errorFile
         JavaExecAction action = ScalaTestAction.makeAction(test, FACTORY)
-        def outStream = action.errorOutput as FileOutputStream
+        def outStream = action.errorOutput
         try {
-            outStream.newPrintWriter().withCloseable {
+            new PrintWriter(outStream).withCloseable {
                 it.println('testing')
             }
             // check the contents

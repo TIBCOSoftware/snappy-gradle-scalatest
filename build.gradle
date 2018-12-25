@@ -17,11 +17,11 @@ apply plugin: 'signing'
 apply plugin: 'maven'
 apply plugin: 'groovy'
 
-group = 'com.github.maiflai'
+group = 'io.snappydata'
 description = 'gradle-scalatest is a Gradle plugin for executing scalatest tests'
 ext {
-    websiteUrl = 'https://github.com/maiflai/gradle-scalatest'
-    sourceUrl = 'https://github.com/maiflai/gradle-scalatest.git'
+    websiteUrl = 'https://github.com/SnappyDataInc/gradle-scalatest'
+    sourceUrl = 'https://github.com/SnappyDataInc/gradle-scalatest.git'
 }
 
 targetCompatibility = '1.6'
@@ -33,6 +33,7 @@ repositories {
 dependencies {
     compile gradleApi()
     compile localGroovy()
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
     testCompile 'junit:junit:4.12'
 }
 
@@ -62,6 +63,9 @@ if (project.version == 'unspecified') {
     version = '0.1-SNAPSHOT'
     project.signArchives.enabled = false
 }
+if (project.hasProperty('skipSign')) {
+    project.signArchives.enabled = false
+}
 
 task showVersion() { doLast { println(project.version) } }
 
@@ -83,7 +87,7 @@ pluginBundle {
 
     plugins {
         scalatestPlugin {
-            id = 'com.github.maiflai.scalatest'
+            id = 'io.snappydata.scalatest'
             displayName = 'Gradle ScalaTest plugin'
         }
     }
@@ -100,13 +104,13 @@ bintray {
         name = project.name
         desc = project.description
         websiteUrl = project.websiteUrl
-        issueTrackerUrl = 'https://github.com/maiflai/gradle-scalatest/issues'
+        issueTrackerUrl = 'https://github.com/SnappyDataInc/gradle-scalatest/issues'
         vcsUrl = project.sourceUrl
         licenses = ['unlicense']
         labels = ['gradle', 'testing', 'scala']
         publicDownloadNumbers = true
         version {
-            attributes = ['gradle-plugin': 'com.github.maiflai.scalatest:com.github.maiflai:gradle-scalatest']
+            attributes = ['gradle-plugin': 'io.snappydata.scalatest:io.snappydata:gradle-scalatest']
         }
 
     }
@@ -118,7 +122,10 @@ uploadArchives {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: propOrDefault('sonatypeUsername'), password: propOrDefault('sonatypePassword'))
+                authentication(userName: propOrDefault('ossrhUsername'), password: propOrDefault('ossrhPassword'))
+            }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: propOrDefault('ossrhUsername'), password: propOrDefault('ossrhPassword'))
             }
 
             pom.project {
@@ -141,6 +148,9 @@ uploadArchives {
                 developers {
                     developer {
                         id 'maiflai'
+                    }
+                    developer {
+                        id 'sumwale'
                     }
                 }
             }
