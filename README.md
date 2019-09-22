@@ -26,6 +26,8 @@ The table below indicates the minimum required version.
 
 |Gradle|gradle-scalatest|scalatest|
 |------|----------------|---------|
+|5.3   |0.25            |2.0      |
+|5.2.1 |0.24            |2.0      |
 |5.0   |0.23            |2.0      |
 |4.5   |0.19            |2.0      |
 |4.0   |0.16            |2.0      |
@@ -133,4 +135,15 @@ It's probably easiest to set this in a gradle.properties file at the root of you
 
 ```
 com.github.maiflai.gradle-scalatest.mode = append
+```
+
+If you then want to use scalatest to run other `Test` tasks, you can instruct this plugin to configure those tasks.
+
+```
+task myTest(dependsOn: testClasses, type: Test, group: 'verification') {
+    com.github.maiflai.ScalaTestPlugin.configure(it)
+    tags {
+        include 'com.example.tags.MyTag'
+    }
+}
 ```
